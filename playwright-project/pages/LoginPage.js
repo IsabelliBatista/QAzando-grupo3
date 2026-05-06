@@ -1,3 +1,4 @@
+//LoginPage.js
 const { BasePage } = require('./BasePage');
 
 /**
@@ -12,8 +13,8 @@ class LoginPage extends BasePage {
     super(page);
 
     // Seletores — centralizados aqui para fácil manutenção
-    this.usernameInput = page.getByLabel('Usuário');
-    this.passwordInput = page.getByLabel('Senha');
+    this.usernameInput = page.getByPlaceholder('seu@email.com');
+    this.passwordInput = page.getByPlaceholder('••••••••');
     this.loginButton   = page.getByRole('button', { name: 'Entrar' });
     this.errorMessage  = page.locator('.error-message');
     this.welcomeText   = page.locator('.welcome-header');
@@ -23,7 +24,7 @@ class LoginPage extends BasePage {
    * Navega para a página de login.
    */
   async goto() {
-    await this.navigate('/login');
+    await this.navigate('/auth');
   }
 
   /**
