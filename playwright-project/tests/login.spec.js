@@ -17,7 +17,7 @@ test.describe('Login', () => {
     allure.tag('smoke', 'login');
 
     await test.step('Preencher credenciais e submeter', async () => {
-      await loginPage.login('custodiodigitalrafael@gmail.com', 'Yveslarock-26');
+      await loginPage.login('seu@email.com', '••••••••');
     });
 
     await test.step('Verificar redirecionamento para o dashboard', async () => {
