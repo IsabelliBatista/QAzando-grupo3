@@ -17,8 +17,12 @@ const test = base.extend({
     await use(new LoginPage(page));
   },
   
-  EntrevistaPage: async ({ page }, use) => {
-    await use(new EntrevistaPage(page));
+  InterviewPage: async ({ page }, use) => {
+    await use(new InterviewPage(page));
+  },
+
+  chatbotPage: async ({ page }, use) => {
+    await use(new ChatbotPage(page));
   },
 
   // Exemplo para adicionar mais pages:
