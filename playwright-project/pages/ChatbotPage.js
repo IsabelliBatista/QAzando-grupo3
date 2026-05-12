@@ -6,15 +6,19 @@ class ChatbotPage extends BasePage {
   constructor(page) {
     super(page);
     
-    this.botaoAvatar = page.getByRole('button', { name: 'Avatar' });
+    this.botaoAvatar = page.getByRole('button', { name: ' Avatar' });
     this.botaoNovaConversa = page.getByRole('button', { name: 'Nova Conversa' });
     this.botaoGravarAudio = page.getByRole('button', { name: 'Gravar áudio' });
+    this.botaoEnviarMensagem = page.locator('button:has(svg.lucide-send)');
+
     this.campoMensagem = page.getByPlaceholder('Type your message in English...');
-    this.verificarCabecalho = page.getByRole('heading', { name: 'Chat com Max' });
+    this.verificarCabecalho = page.getByText(/Chat com Max/i);
+    this.verificarRespostaMax = page.locator('p.whitespace-pre-wrap.break-words.leading-relaxed');
   }
 
   async goto() {
     await this.navigate('/chatbot');
+    await this.page.waitForLoadState('networkidle');
   }
 
   async cabecalho() {
@@ -25,12 +29,28 @@ class ChatbotPage extends BasePage {
     await expect(this.botaoAvatar).toBeVisible();
   }
 
-  async novaConversa() {
+  async verificarNovaConversa() {
     await expect(this.botaoNovaConversa).toBeVisible();
   }
 
-  async mensagem() {
+  async botaoNovaConversa() {
+    await this.botaoNovaConversa.click();
+  }
+
+  async verificarMensagem() {
     await expect(this.campoMensagem).toBeVisible();
+  }
+
+  async mensagem(mensagem) {
+    await this.campoMensagem.fill(mensagem);
+  }
+
+  async enviarMensagem() {
+    await this.botaoEnviarMensagem.click();
+  }
+
+  async respostaMax() {
+    await expect(this.verificarRespostaMax).toBeVisible({ timeout: 15000 });
   }
   
   async gravarAudio() {

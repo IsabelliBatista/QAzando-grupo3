@@ -11,48 +11,57 @@ test.describe('Falar com Max', () => {
   });
 
     test('TC001 - Carregamento do Chat com Max', async ({  page }) => { 
+        const chatbotPage = new ChatbotPage(page);
         // Dado que o usuário está logado na plataforma
         // Quando acessa a página "Chat com Max" /chatbot
         await test.step('Acessa a página "Chat com Max"', async () => {
-            const chatbotPage = new ChatbotPage(page);
             await chatbotPage.goto();
         });
         
         // Então o sistema deve exibir o cabeçalho "Chat com Max"
         await test.step('Verifica o cabeçalho "Chat com Max"', async () => {
-            //await ChatbotPage.cabecalho();
+            await chatbotPage.cabecalho();
         });
         // E deve exibir os botões "Avatar" e "Nova Conversa"
         await test.step('Verifica os botões "Avatar" e "Nova Conversa"', async () => {
-            await expect(ChatbotPage.verificarAvatar);
-            await expect(ChatbotPage.novaConversa);
+            await chatbotPage.verificarAvatar();
+            await chatbotPage.verificarNovaConversa();
         });
         // E deve exibir campo 'Type your message in English...'
         await test.step('Verifica o campo "Type your message in English..."', async () => {
-            await expect(ChatbotPage.campoMensagem);
+            await chatbotPage.verificarMensagem();
         });
         // E deve exibir botão "Gravar áudio"
         await test.step('Verifica o botão "Gravar áudio"', async () => {
-            await expect(ChatbotPage.gravarAudio).toBeVisible();
+            await chatbotPage.gravarAudio();
         });
     });
 
     test('TC002 - Enviar mensagem de texto em inglês', async ({  page }) => { 
+        const chatbotPage = new ChatbotPage(page);
         // Dado que o usuário está na página "Chat com Max"
         await test.step('Acessa a página "Chat com Max"', async () => {
-            const chatbotPage = new ChatbotPage(page);
             await chatbotPage.goto();
         });
-        
         // Quando digita mensagem de texto em inglês "Hello"
+        await test.step('Digita mensagem de texto em inglês "Hello"', async () => {
+            await chatbotPage.mensagem('Hello');
+        });
         // E clica enviar 
+        await test.step('Clica no botão enviar', async () => {
+            await chatbotPage.enviarMensagem();
+        });
         // Então Max responde 
+        await test.step('Verifica resposta do Max', async () => {
+            // Aqui você pode adicionar uma verificação para a resposta do Max, por exemplo:
+            await chatbotPage.respostaMax();
+        });
     });
 
     test('TC003 - Tentar enviar mensagem vazia', async ({  page }) => {
+        const chatbotPage = new ChatbotPage(page);
         // Dado que o usuário está na página "Chat com Max"
         await test.step('Acessa a página "Chat com Max"', async () => {
-            const chatbotPage = new ChatbotPage(page);
             await chatbotPage.goto();
         });
         // Quando campo 'Type your message in English...' estiver vazio
@@ -60,9 +69,9 @@ test.describe('Falar com Max', () => {
     });
 
     test('TC004 - Gravar áudio para enviar mensagem', async ({  page }) => {
+        const chatbotPage = new ChatbotPage(page);
         // Dado que o usuário está na página "Chat com Max"
         await test.step('Acessa a página "Chat com Max"', async () => {
-            const chatbotPage = new ChatbotPage(page);
             await chatbotPage.goto();
         });
         // Quando clica no botão "Gravar áudio"
@@ -73,9 +82,9 @@ test.describe('Falar com Max', () => {
     });
 
     test('TC005 - Negar permissão de microfone', async ({  page }) => {
+        const chatbotPage = new ChatbotPage(page);
         // Dado que o usuário está na página "Chat com Max"
         await test.step('Acessa a página "Chat com Max"', async () => {
-            const chatbotPage = new ChatbotPage(page);
             await chatbotPage.goto();
         });
         // Quando clica no botão "Gravar áudio"
@@ -84,8 +93,8 @@ test.describe('Falar com Max', () => {
     });
 
     test('TC006 - Botão "Nova Conversa" limpa o histórico', async ({  page }) => {
+        const chatbotPage = new ChatbotPage(page);
         await test.step('Acessa a página "Chat com Max"', async () => {
-            const chatbotPage = new ChatbotPage(page);
             await chatbotPage.goto();
         });
         // Dado que uma conversa foi iniciada
@@ -96,8 +105,8 @@ test.describe('Falar com Max', () => {
     });
 
     test('TC007 - Histórico da conversa exibido em ordem', async ({  page }) => {
+        const chatbotPage = new ChatbotPage(page);
         await test.step('Acessa a página "Chat com Max"', async () => {
-            const chatbotPage = new ChatbotPage(page);
             await chatbotPage.goto();
         });
         // Dado que uma mensagem foi enviada
