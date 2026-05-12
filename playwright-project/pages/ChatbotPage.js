@@ -9,11 +9,13 @@ class ChatbotPage extends BasePage {
     this.botaoAvatar = page.getByRole('button', { name: ' Avatar' });
     this.botaoNovaConversa = page.getByRole('button', { name: 'Nova Conversa' });
     this.botaoGravarAudio = page.getByRole('button', { name: 'Gravar áudio' });
+    this.botaoPararAudio = page.getByRole('button', { name: 'Parar gravação' });
     this.botaoEnviarMensagem = page.locator('button:has(svg.lucide-send)');
 
     this.campoMensagem = page.getByPlaceholder('Type your message in English...');
     this.verificarCabecalho = page.getByText(/Chat com Max/i);
     this.verificarRespostaMax = page.locator('p.whitespace-pre-wrap.break-words.leading-relaxed');
+    this.verificarRespostaMaxAudio = page.locator('Não foi possível reconhecer o áudio. Tente novamente.');
   }
 
   async goto() {
@@ -53,8 +55,20 @@ class ChatbotPage extends BasePage {
     await expect(this.verificarRespostaMax).toBeVisible({ timeout: 15000 });
   }
   
-  async gravarAudio() {
+  async verificarAudio() {
     await expect(this.botaoGravarAudio).toBeVisible();
+  }
+
+  async gravarAudio() {
+    await this.botaoGravarAudio.click();
+  }
+
+  async pararGravarAudio() {
+    await this.botaoPararAudio.click();
+  }
+
+  async respostaMaxAudio() {
+    await expect(this.verificarRespostaMax).toBeVisible({ timeout: 15000 });
   }
 
 }

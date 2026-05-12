@@ -33,7 +33,7 @@ test.describe('Falar com Max', () => {
         });
         // E deve exibir botão "Gravar áudio"
         await test.step('Verifica o botão "Gravar áudio"', async () => {
-            await chatbotPage.gravarAudio();
+            await chatbotPage.verificarAudio();
         });
     });
 
@@ -65,7 +65,13 @@ test.describe('Falar com Max', () => {
             await chatbotPage.goto();
         });
         // Quando campo 'Type your message in English...' estiver vazio
+        await test.step('Verifica campo de mensagem vazio', async () => {
+            await chatbotPage.mensagem(''); // Preenche o campo com uma string vazia
+        });
         // Então o botão enviar deve estar desabilitado
+        await test.step('Verifica botão enviar desabilitado', async () => {
+            await chatbotPage.botaoEnviarMensagem.isDisabled();
+        });
     });
 
     test('TC004 - Gravar áudio para enviar mensagem', async ({  page }) => {
@@ -75,10 +81,26 @@ test.describe('Falar com Max', () => {
             await chatbotPage.goto();
         });
         // Quando clica no botão "Gravar áudio"
+        await test.step('Clica no botão "Gravar áudio"', async () => {
+            await chatbotPage.gravarAudio();
+        });
+        // E concede permissão de acesso ao microfone
+        await test.step('Concede permissão de acesso ao microfone', async () => {
+            // adicionar uma simulação de concessão de permissão
+        });
         // E fala alguma palavra
+        await test.step('Fala alguma palavra', async () => {
+            // adicionar uma simulação de fala
+        });
         // E clica em "Parar gravação"
+        await test.step('Clica em "Parar gravação"', async () => {
+            await chatbotPage.pararGravarAudio();
+        });
         // Então Max recebe o áudio 
         // E responde 
+        await test.step('Verifica resposta do Max', async () => {
+            await chatbotPage.respostaMaxAudio();
+        });
     });
 
     test('TC005 - Negar permissão de microfone', async ({  page }) => {
@@ -88,7 +110,13 @@ test.describe('Falar com Max', () => {
             await chatbotPage.goto();
         });
         // Quando clica no botão "Gravar áudio"
+        await test.step('Clica no botão "Gravar áudio"', async () => {
+            await chatbotPage.gravarAudio();
+        });
         // E nega permissão de acesso ao microfone
+        await test.step('Nega permissão de acesso ao microfone', async () => {
+            // Aqui você pode adicionar uma simulação de negação de permissão, dependendo do ambiente de teste
+        });
         // Então exibe mensagem orientativa sem quebrar a interface
     });
 
