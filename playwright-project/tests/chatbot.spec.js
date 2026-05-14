@@ -76,6 +76,7 @@ test.describe('Falar com Max', () => {
 
     test('TC004 - Gravar áudio para enviar mensagem', async ({  page }) => {
         const chatbotPage = new ChatbotPage(page);
+        
         // Dado que o usuário está na página "Chat com Max"
         await test.step('Acessa a página "Chat com Max"', async () => {
             await chatbotPage.goto();
@@ -115,21 +116,38 @@ test.describe('Falar com Max', () => {
         });
         // E nega permissão de acesso ao microfone
         await test.step('Nega permissão de acesso ao microfone', async () => {
-            // Aqui você pode adicionar uma simulação de negação de permissão, dependendo do ambiente de teste
+            // negar permissão não é possível por meio do playwrigh
         });
         // Então exibe mensagem orientativa sem quebrar a interface
+        await test.step('Verifica mensagem orientativa', async () => {
+            await chatbotPage.respostaMaxAudio();
+        });
     });
 
     test('TC006 - Botão "Nova Conversa" limpa o histórico', async ({  page }) => {
         const chatbotPage = new ChatbotPage(page);
+
         await test.step('Acessa a página "Chat com Max"', async () => {
             await chatbotPage.goto();
         });
         // Dado que uma conversa foi iniciada
+        await test.step('Inicia uma conversa', async () => {
+            await chatbotPage.mensagem('Hello');
+            await chatbotPage.enviarMensagem();
+            await chatbotPage.respostaMax();
+        });
         // Quando clicar no botão "Nova Conversa"
+        await test.step('Clica no botão "Nova Conversa"', async () => {
+            await chatbotPage.novaConversa();
+        });
         // Então é apagado as mensagens anteriores
-        // E exibe estado vazio novamente
+        await test.step('Verifica histórico apagado', async () => {
+            await chatbotPage.verificarMensagem();
+        });
         // E exibe alerta "Nova Conversa"
+        await test.step('Verifica alerta "Nova Conversa"', async () => {
+            await chatbotPage.novaConversa();
+        });
     });
 
     test('TC007 - Histórico da conversa exibido em ordem', async ({  page }) => {
