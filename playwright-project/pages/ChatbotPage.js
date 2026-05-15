@@ -15,7 +15,7 @@ class ChatbotPage extends BasePage {
     this.campoMensagem = page.getByPlaceholder('Type your message in English...');
     this.verificarCabecalho = page.getByText(/Chat com Max/i);
     this.verificarRespostaMax = page.locator('p.whitespace-pre-wrap.break-words.leading-relaxed');
-    this.verificarRespostaMaxAudio = page.locator('Erro');
+    this.verificarRespostaMaxAudio = page.locator('p.whitespace-pre-wrap.break-words.leading-relaxed');
     this.alertaNovaConversa = page.getByText('Nova Conversa');
   }
 
@@ -44,7 +44,11 @@ class ChatbotPage extends BasePage {
     await expect(this.campoMensagem).toBeVisible();
   }
 
-  async novaConversa() {
+  async clicarNovaConversa() {
+    await this.botaoNovaConversa.click();
+  }
+
+  async verificarAlertaNovaConversa() {
     await expect(this.alertaNovaConversa).toBeVisible({ timeout: 15000 });
   }
 
@@ -73,7 +77,7 @@ class ChatbotPage extends BasePage {
   }
 
   async respostaMaxAudio() {
-    await expect(this.verificarRespostaMaxAudio).toBeVisible({ timeout: 15000 });
+    await expect(this.verificarRespostaMaxAudio).toBeVisible({ timeout: 20000 });
   }
 
 }

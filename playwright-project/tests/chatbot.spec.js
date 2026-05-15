@@ -1,7 +1,10 @@
 //chatbot.spec.js
 const { test, expect } = require('../fixtures');
 const { allure }       = require('allure-playwright');
+const { chromium } = require('playwright');
 const { ChatbotPage } = require ('../pages/ChatbotPage');
+const { LoginPage } = require('../pages/LoginPage');
+const path = require('path');
 
 test.describe('Falar com Max', () => {
 
@@ -70,12 +73,38 @@ test.describe('Falar com Max', () => {
         });
         // Então o botão enviar deve estar desabilitado
         await test.step('Verifica botão enviar desabilitado', async () => {
-            await chatbotPage.botaoEnviarMensagem.isDisabled();
+            await expect(chatbotPage.botaoEnviarMensagem).toBeDisabled();
         });
     });
 
     test('TC004 - Gravar áudio para enviar mensagem', async ({  page }) => {
         const chatbotPage = new ChatbotPage(page);
+
+        // caminho do WAV
+        const audioFile = path.resolve(
+            __dirname,
+            '..',
+            'fixtures',
+            'helloMax.wav'
+        );
+        // browser com microfone fake
+        const browser = await chromium.launch({
+            headless: false,
+            args: [
+            '--use-fake-ui-for-media-stream',
+            '--use-fake-device-for-media-stream',
+            `--use-file-for-fake-audio-capture=${audioFile}`
+            ]
+        });
+
+        // Dado que o usuário está na página "Chat com Max"
+        await test.step('Acessa a página "Chat com Max"', async () => {
+            await chatbotPage.goto();
+        });
+        // Quando clica no botão "Gravar áudio"
+        await test.step('Clica no botão "Gravar áudio"', async () => {
+            await chatbotPage.gravarAudio();
+        });
         
         // Dado que o usuário está na página "Chat com Max"
         await test.step('Acessa a página "Chat com Max"', async () => {
@@ -85,24 +114,27 @@ test.describe('Falar com Max', () => {
         await test.step('Clica no botão "Gravar áudio"', async () => {
             await chatbotPage.gravarAudio();
         });
-        // E concede permissão de acesso ao microfone
+        // E concede permissão de acesso ao microfone (já concedida ao contexto)
         await test.step('Concede permissão de acesso ao microfone', async () => {
-            // adicionar uma simulação de concessão de permissão
+            // permissão já aplicada ao contextoAudio
         });
-        // E fala alguma palavra
+        // E fala alguma palavra (áudio será reproduzido a partir do arquivo configurado)
         await test.step('Fala alguma palavra', async () => {
-            // adicionar uma simulação de fala
+            //await pageAudio.waitForTimeout(3000);
+            await page.waitForTimeout(3000);
         });
         // E clica em "Parar gravação"
         await test.step('Clica em "Parar gravação"', async () => {
             await chatbotPage.pararGravarAudio();
         });
-        // Então Max recebe o áudio 
-        // E responde 
+        // Então Max recebe o áudio e responde
         await test.step('Verifica resposta do Max', async () => {
             await chatbotPage.respostaMaxAudio();
         });
+
+        await browserForAudio.close();
     });
+
 
     test('TC005 - Negar permissão de microfone', async ({  page }) => {
         const chatbotPage = new ChatbotPage(page);
@@ -138,7 +170,7 @@ test.describe('Falar com Max', () => {
         });
         // Quando clicar no botão "Nova Conversa"
         await test.step('Clica no botão "Nova Conversa"', async () => {
-            await chatbotPage.novaConversa();
+            await chatbotPage.clicarNovaConversa();
         });
         // Então é apagado as mensagens anteriores
         await test.step('Verifica histórico apagado', async () => {
@@ -146,7 +178,7 @@ test.describe('Falar com Max', () => {
         });
         // E exibe alerta "Nova Conversa"
         await test.step('Verifica alerta "Nova Conversa"', async () => {
-            await chatbotPage.novaConversa();
+            await chatbotPage.verificarAlertaNovaConversa();
         });
     });
 

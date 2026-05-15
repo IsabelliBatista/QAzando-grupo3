@@ -1,6 +1,7 @@
 const { test: base } = require('@playwright/test');
 const { LoginPage }  = require('../pages/LoginPage');
-const { EntrevistaPage }  = require('../pages/InterviewPage');
+const { InterviewPage }  = require('../pages/InterviewPage');
+const { ChatbotPage } = require('../pages/ChatbotPage');
 // Importe outros Page Objects aqui conforme o projeto crescer:
 // const { DashboardPage } = require('../pages/DashboardPage');
 
@@ -16,8 +17,7 @@ const test = base.extend({
   loginPage: async ({ page }, use) => {
     await use(new LoginPage(page));
   },
-  
-  InterviewPage: async ({ page }, use) => {
+  interviewPage: async ({ page }, use) => {
     await use(new InterviewPage(page));
   },
 
