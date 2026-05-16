@@ -7,7 +7,7 @@ test.describe('Entrevista', () => {
 
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.goto();
-    await loginPage.login('custodiodigitalrafael@gmail.com', 'Yveslarock-26');
+    await loginPage.login('@gmail.com', '1234');
   });
 
   test('TC001 - Carregamento da tela', async ({  page }) => {

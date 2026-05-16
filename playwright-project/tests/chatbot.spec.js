@@ -10,7 +10,7 @@ test.describe('Falar com Max', () => {
 
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.goto();
-    await loginPage.login('custodiodigitalrafael@gmail.com', 'Yveslarock-26');
+    await loginPage.login('@gmail.com', '1234');
   });
 
     test('TC001 - Carregamento do Chat com Max', async ({  page }) => { 
@@ -129,7 +129,7 @@ test.describe('Falar com Max', () => {
         });
         // Então Max recebe o áudio e responde
         await test.step('Verifica resposta do Max', async () => {
-            await chatbotPage.respostaMaxAudio();
+            await chatbotPage.respostaMax();
         });
 
         await browserForAudio.close();
@@ -137,6 +137,13 @@ test.describe('Falar com Max', () => {
 
 
     test('TC005 - Negar permissão de microfone', async ({  page }) => {
+        
+        await page.addInitScript(() => {
+            navigator.mediaDevices.getUserMedia = async () => {
+                throw new Error('Permission denied');
+            };
+        });
+
         const chatbotPage = new ChatbotPage(page);
         // Dado que o usuário está na página "Chat com Max"
         await test.step('Acessa a página "Chat com Max"', async () => {
@@ -152,7 +159,7 @@ test.describe('Falar com Max', () => {
         });
         // Então exibe mensagem orientativa sem quebrar a interface
         await test.step('Verifica mensagem orientativa', async () => {
-            await chatbotPage.respostaMaxAudio();
+            await chatbotPage.verificarAlertaErroAudio();
         });
     });
 
@@ -188,8 +195,18 @@ test.describe('Falar com Max', () => {
             await chatbotPage.goto();
         });
         // Dado que uma mensagem foi enviada
+        await test.step('Envia uma mensagem', async () => {
+            await chatbotPage.mensagem('Hello');
+            await chatbotPage.enviarMensagem();
+        });
         // Quando Max responder
+        await test.step('Max responde', async () => {
+            await chatbotPage.respostaMax();
+        });
         // Então o chat deve mostrar as frases em ordem de envio
+        await test.step('Verifica ordem das mensagens', async () => {
+            await chatbotPage.verificarOrdemMensagens();
+        });
     });
 
 });

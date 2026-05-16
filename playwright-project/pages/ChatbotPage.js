@@ -17,6 +17,7 @@ class ChatbotPage extends BasePage {
     this.verificarRespostaMax = page.locator('p.whitespace-pre-wrap.break-words.leading-relaxed');
     this.verificarRespostaMaxAudio = page.locator('p.whitespace-pre-wrap.break-words.leading-relaxed');
     this.alertaNovaConversa = page.getByText('Nova Conversa');
+    this.alertaErroAudio = page.getByText('Não foi possível reconhecer o áudio. Tente novamente.');
   }
 
   async goto() {
@@ -80,6 +81,16 @@ class ChatbotPage extends BasePage {
     await expect(this.verificarRespostaMaxAudio).toBeVisible({ timeout: 20000 });
   }
 
-}
+  async verificarAlertaErroAudio() {
+    await expect(this.alertaErroAudio).toBeVisible({ timeout: 15000 });
+  }
 
+  async verificarOrdemMensagens() {
+    const mensagens = await this.page.locator('p.whitespace-pre-wrap.break-words.leading-relaxed').allTextContents();
+    const mensagensUsuario = mensagens.filter(text => text.startsWith('User:'));
+    const mensagensMax = mensagens.filter(text => text.startsWith('Max:')); 
+  }
+
+
+} 
 module.exports = { ChatbotPage };
