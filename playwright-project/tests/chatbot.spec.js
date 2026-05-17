@@ -78,34 +78,40 @@ test.describe('Falar com Max', () => {
     });
 
     test('TC004 - Gravar áudio para enviar mensagem', async ({  page }) => {
-        const chatbotPage = new ChatbotPage(page);
-
-        // caminho do WAV
+       // caminho do WAV
         const audioFile = path.resolve(
             __dirname,
             '..',
             'fixtures',
             'helloMax.wav'
         );
+
         // browser com microfone fake
         const browser = await chromium.launch({
             headless: false,
             args: [
-            '--use-fake-ui-for-media-stream',
-            '--use-fake-device-for-media-stream',
-            `--use-file-for-fake-audio-capture=${audioFile}`
+                '--use-fake-ui-for-media-stream',
+                '--use-fake-device-for-media-stream',
+                `--use-file-for-fake-audio-capture=${audioFile}`
             ]
         });
 
-        // Dado que o usuário está na página "Chat com Max"
-        await test.step('Acessa a página "Chat com Max"', async () => {
-            await chatbotPage.goto();
+        // contexto com permissão
+        const context = await browser.newContext({
+            permissions: ['microphone']
         });
-        // Quando clica no botão "Gravar áudio"
-        await test.step('Clica no botão "Gravar áudio"', async () => {
-            await chatbotPage.gravarAudio();
+        // AQUI está a page correta
+        const page = await context.newPage();
+
+        // page object usando page correta
+        const chatbotPage = new ChatbotPage(page);
+
+        // logs úteis
+        page.on('console', msg => {
+            console.log('BROWSER:', msg.text());
         });
-        
+
+    
         // Dado que o usuário está na página "Chat com Max"
         await test.step('Acessa a página "Chat com Max"', async () => {
             await chatbotPage.goto();
@@ -117,6 +123,7 @@ test.describe('Falar com Max', () => {
         // E concede permissão de acesso ao microfone (já concedida ao contexto)
         await test.step('Concede permissão de acesso ao microfone', async () => {
             // permissão já aplicada ao contextoAudio
+            await page.waitForTimeout(5000);
         });
         // E fala alguma palavra (áudio será reproduzido a partir do arquivo configurado)
         await test.step('Fala alguma palavra', async () => {
@@ -125,11 +132,12 @@ test.describe('Falar com Max', () => {
         });
         // E clica em "Parar gravação"
         await test.step('Clica em "Parar gravação"', async () => {
+            await page.locator('button[toast-close]').click();
             await chatbotPage.pararGravarAudio();
         });
         // Então Max recebe o áudio e responde
         await test.step('Verifica resposta do Max', async () => {
-            await chatbotPage.respostaMax();
+            await chatbotPage.respostaMaxAudio();
         });
 
         await browserForAudio.close();

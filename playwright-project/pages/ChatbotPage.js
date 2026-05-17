@@ -15,7 +15,7 @@ class ChatbotPage extends BasePage {
     this.campoMensagem = page.getByPlaceholder('Type your message in English...');
     this.verificarCabecalho = page.getByText(/Chat com Max/i);
     this.verificarRespostaMax = page.locator('p.whitespace-pre-wrap.break-words.leading-relaxed');
-    this.verificarRespostaMaxAudio = page.locator('p.whitespace-pre-wrap.break-words.leading-relaxed');
+    this.verificarRespostaMaxAudio = page.getByText('Texto reconhecido');
     this.alertaNovaConversa = page.getByText('Nova Conversa');
     this.alertaErroAudio = page.getByText('Não foi possível reconhecer o áudio. Tente novamente.');
   }

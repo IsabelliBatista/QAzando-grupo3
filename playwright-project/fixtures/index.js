@@ -25,6 +25,10 @@ const test = base.extend({
     await use(new ChatbotPage(page));
   },
 
+  pronunciationPage: async ({ page }, use) => {
+    await use(new PronunciationPage(page));
+  },
+
   // Exemplo para adicionar mais pages:
   // dashboardPage: async ({ page }, use) => {
   //   await use(new DashboardPage(page));
