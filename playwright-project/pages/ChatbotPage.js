@@ -15,9 +15,9 @@ class ChatbotPage extends BasePage {
     this.campoMensagem = page.getByPlaceholder('Type your message in English...');
     this.verificarCabecalho = page.getByText(/Chat com Max/i);
     this.verificarRespostaMax = page.locator('p.whitespace-pre-wrap.break-words.leading-relaxed');
-    this.verificarRespostaMaxAudio = page.getByText('Texto reconhecido');
-    this.alertaNovaConversa = page.getByText('Nova Conversa');
-    this.alertaErroAudio = page.getByText('Não foi possível reconhecer o áudio. Tente novamente.');
+    this.verificarRespostaMaxAudio = page.locator('div.text-sm.font-semibold',{ hasText: 'Texto reconhecido' });
+    this.alertaNovaConversa = page.locator('div.text-sm.font-semibold',{ hasText: 'Nova Conversa' });
+    this.alertaErroAudio = page.locator('div.text-sm.font-semibold',{ hasText: 'Erro' });
   }
 
   async goto() {
@@ -78,11 +78,11 @@ class ChatbotPage extends BasePage {
   }
 
   async respostaMaxAudio() {
-    await expect(this.verificarRespostaMaxAudio).toBeVisible({ timeout: 20000 });
+    await expect(this.verificarRespostaMaxAudio).toBeVisible({ timeout: 5000 });
   }
 
   async verificarAlertaErroAudio() {
-    await expect(this.alertaErroAudio).toBeVisible({ timeout: 15000 });
+    await expect(this.alertaErroAudio).toBeVisible({ timeout: 5000 });
   }
 
   async verificarOrdemMensagens() {

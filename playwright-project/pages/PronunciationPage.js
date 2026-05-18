@@ -9,9 +9,9 @@ class PronunciationPage extends BasePage {
         this.campoTitulo = page.getByRole('heading', { name: 'Treinar Pronúncia' });
         this.campoSubtitulo = page.getByText('Pratique sua pronúncia com frases geradas por IA e feedback em tempo real');
         this.botaoGerarFrase = page.getByRole('button', { name: 'Gerar Nova Frase com IA' });
-        this.campoFraseGerada = page.getByText('text-3xl.font-bold.text-foreground.mb-6.text-center.leading-relaxed');
         this.botaoFalarAgora = page.getByRole('button', { name: 'Falar Agora e Receber Feedback' });
         this.campoAlertaErroAudio = page.getByText('Não foi possível reconhecer o áudio. Tente novamente.');
+        this.alertaFraseGerada = page.locator('div.text-sm.font-semibold',{ hasText: 'Nova frase gerada!' });
     }
 
     async goto() {
@@ -32,7 +32,7 @@ class PronunciationPage extends BasePage {
     }
 
     async verificarFraseGerada() {
-        await expect(this.campoFraseGerada).toBeVisible({ timeout: 10000 });
+        await expect(this.alertaFraseGerada).toBeVisible({ timeout: 10000 });
     }
 
     async verificarAlertaErroAudio() {

@@ -1,7 +1,7 @@
 //pronunciation.spec.js
 const { test, expect } = require('../fixtures');
 const { allure }       = require('allure-playwright');
-const { PronunciationPage } = require ('../pages/PronunciationPage');
+const { PronunciationPage } = require('../pages/PronunciationPage');
 const { LoginPage } = require('../pages/LoginPage');
 const path = require('path');
 
@@ -9,14 +9,14 @@ test.describe('Treinar Pronúncia', () => {
 
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.goto();
-    await loginPage.login('@gmail.com', '1234');
+    await loginPage.login('custodiodigitalrafael@gmail.com', 'Yveslarock-26');
   });
 
   test('TC001 - Carregamento da tela "Treinar Pronúncia"', async ({  page }) => {
+    const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário esteja logado
     // Quando abrir página Treinar Fala
     await test.step('Acessa a página "Treinar Pronúncia"', async () => {
-      const pronunciationPage = new PronunciationPage(page);
       await pronunciationPage.goto();
     });
     // Então deve exibir Treinar fala
@@ -34,9 +34,9 @@ test.describe('Treinar Pronúncia', () => {
   });
 
   test('TC002 - Gerar nova frase para praticar', async ({  page }) => {
+    const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário esteja na página Treinar Fala
     await test.step('Acessa a página "Treinar Pronúncia"', async () => {
-      const pronunciationPage = new PronunciationPage(page);
       await pronunciationPage.goto();
     });
     // Quando clicar no botão Gerar Nova Frase com IA
@@ -50,9 +50,9 @@ test.describe('Treinar Pronúncia', () => {
   });
 
   test('TC003 - Gravar pronúncia da frase gerada', async ({  page }) => {
+    const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário tenha recebido uma frase em inglês
     await test.step('Acessa a página "Treinar Pronúncia" e gera uma frase', async () => {
-      const pronunciationPage = new PronunciationPage(page);
       await pronunciationPage.goto();
       await pronunciationPage.clicarGerarFrase();
     });
@@ -66,21 +66,23 @@ test.describe('Treinar Pronúncia', () => {
   });
 
   test('TC004 - Receber feedback de pronúncia correta', async ({  page }) => {
+    const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário tenha uma frase em inglês
     // Quando gravar a pronúncia correta
     // Então deve retornar um alerta com feedback positivo
   });
 
   test('TC005 - Receber feedback de pronúncia incorreta', async ({  page }) => {
+    const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário tenha uma frase em inglês
     // Quando gravar a pronúncia incorreta
     // Então deve retornar um alerta com dicas de melhoria
   });
 
   test('TC006 - Negar permissão de microfone', async ({  page }) => {
+    const pronunciationPage = new PronunciationPage(page);
     // Dado que o ususário tenha uma frase 
     await test.step('Acessa a página "Treinar Pronúncia"', async () => {
-        const pronunciationPage = new PronunciationPage(page);
         await pronunciationPage.goto();
         await pronunciationPage.clicarGerarFrase();
     });
@@ -103,7 +105,15 @@ test.describe('Treinar Pronúncia', () => {
   });
 
   test('TC007 - Gerar nova frase após praticar', async ({  page }) => {
-    // Dado que foi entregue feedback
+    const pronunciationPage = new PronunciationPage(page);
+    // Dado que o usuário tenha praticado a pronúncia de uma frase
+    await test.step('Acessa a página "Treinar Pronúncia" e pratica uma frase', async () => {
+        await pronunciationPage.goto();
+        await pronunciationPage.clicarGerarFrase();
+        await pronunciationPage.clicarFalarAgora();
+        //enviar audio com pronúncia 
+    });
+    // E foi entregue feedback
     // Quando clicar em Gerar outra frase
     // Então deve retornar uma nova frase em inglês 
   });
