@@ -48,7 +48,7 @@ test.describe('Login', () => {
     });
 
     await test.step('Permanecer na página de login', async () => {
-      await expect(page).toHaveURL(/login/);
+      await expect(page).toHaveURL(/auth/);
     });
   });
 

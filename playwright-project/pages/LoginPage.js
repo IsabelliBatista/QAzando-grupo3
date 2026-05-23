@@ -23,7 +23,7 @@ class LoginPage extends BasePage {
    * Navega para a página de login.
    */
   async goto() {
-    await this.navigate('/login');
+    await this.navigate('/auth');
   }
 
   /**
