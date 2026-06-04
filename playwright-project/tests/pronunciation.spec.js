@@ -12,7 +12,7 @@ test.describe('Treinar Pronúncia', () => {
     await loginPage.login('custodiodigitalrafael@gmail.com', 'Yveslarock-26');
   });
 
-  test('TC001 - Carregamento da tela "Treinar Pronúncia"', async ({  page }) => {
+  test('CT-001 | Carregamento da tela "Treinar Pronúncia"', async ({  page }) => {
     const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário esteja logado
     // Quando abrir página Treinar Fala
@@ -33,7 +33,7 @@ test.describe('Treinar Pronúncia', () => {
     });
   });
 
-  test('TC002 - Gerar nova frase para praticar', async ({  page }) => {
+  test('CT-002 | Gerar nova frase para praticar', async ({  page }) => {
     const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário esteja na página Treinar Fala
     await test.step('Acessa a página "Treinar Pronúncia"', async () => {
@@ -49,7 +49,7 @@ test.describe('Treinar Pronúncia', () => {
     });
   });
 
-  test('TC003 - Gravar pronúncia da frase gerada', async ({  page }) => {
+  test('CT-003 | Gravar pronúncia da frase gerada', async ({  page }) => {
     const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário tenha recebido uma frase em inglês
     await test.step('Acessa a página "Treinar Pronúncia" e gera uma frase', async () => {
@@ -65,21 +65,21 @@ test.describe('Treinar Pronúncia', () => {
     
   });
 
-  test('TC004 - Receber feedback de pronúncia correta', async ({  page }) => {
+  test('CT-004 | Receber feedback de pronúncia correta', async ({  page }) => {
     const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário tenha uma frase em inglês
     // Quando gravar a pronúncia correta
     // Então deve retornar um alerta com feedback positivo
   });
 
-  test('TC005 - Receber feedback de pronúncia incorreta', async ({  page }) => {
+  test('CT-005 | Receber feedback de pronúncia incorreta', async ({  page }) => {
     const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário tenha uma frase em inglês
     // Quando gravar a pronúncia incorreta
     // Então deve retornar um alerta com dicas de melhoria
   });
 
-  test('TC006 - Negar permissão de microfone', async ({  page }) => {
+  test('CT-006 | Negar permissão de microfone', async ({  page }) => {
     const pronunciationPage = new PronunciationPage(page);
     // Dado que o ususário tenha uma frase 
     await test.step('Acessa a página "Treinar Pronúncia"', async () => {
@@ -104,7 +104,7 @@ test.describe('Treinar Pronúncia', () => {
     });
   });
 
-  test('TC007 - Gerar nova frase após praticar', async ({  page }) => {
+  test('CT-007 | Gerar nova frase após praticar', async ({  page }) => {
     const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário tenha praticado a pronúncia de uma frase
     await test.step('Acessa a página "Treinar Pronúncia" e pratica uma frase', async () => {

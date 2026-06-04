@@ -8,6 +8,7 @@ class InterviewPage extends BasePage {
 
     this.botaoGerarPergunta = page.getByRole('button', { name: 'Gerar Pergunta de Entrevista' });
     this.campoResposta      = page.getByPlaceholder('Type your answer here in English...');
+    this.campoTituloComecar = page.getByRole('heading', { name: 'Pronto para começar?', level: 3 });
     this.botaoEnviarResposta = page.getByRole('button', { name: 'Enviar Resposta' }); 
     this.botaoGerarNovaPergunta = page.getByRole('button', { name: 'Gerar Nova Pergunta' });
     this.perguntaComSucesso = page.getByText('Sua pergunta de entrevista foi criada com sucesso');
@@ -19,7 +20,7 @@ class InterviewPage extends BasePage {
   }
 
   async gerarPergunta() {
-    await this.botaoGerarPergunta.click();
+    await this.botaoGerarPergunta.click({timeout: 15000});
   }
 
   async responder(resposta) {
@@ -27,11 +28,19 @@ class InterviewPage extends BasePage {
   }
 
   async enviarResposta() {
-    return this.botaoEnviarResposta.click();
+    return this.botaoEnviarResposta.click({timeout: 10000});
   }
 
   async gerarNovaPergunta() {
     await this.botaoGerarNovaPergunta.click();
+  }
+
+  async verificarTituloComecar() {
+    await expect(this.campoTituloComecar).toBeVisible();
+  }
+
+  async verificarBotaoGerarPergunta() {
+    await expect(this.botaoGerarPergunta).toBeVisible();
   }
 
   async verificarBotaoEnviarDesabilitado() {

@@ -12,10 +12,10 @@ test.describe('Falar com Max', () => {
 
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.goto();
-    await loginPage.login('@gmail.com', '1234');
+    await loginPage.login('custodiodigitalrafael@gmail.com', 'Yveslarock-26');
   });
 
-    test('TC001 - Carregamento do Chat com Max', async ({  page }) => { 
+    test('CT-001 | Carregamento do Chat com Max', async ({  page }) => { 
         const chatbotPage = new ChatbotPage(page);
         // Dado que o usuário está logado na plataforma
         // Quando acessa a página "Chat com Max" /chatbot
@@ -42,7 +42,7 @@ test.describe('Falar com Max', () => {
         });
     });
 
-    test('TC002 - Enviar mensagem de texto em inglês', async ({  page }) => { 
+    test('CT-002 | Enviar mensagem de texto em inglês', async ({  page }) => { 
         const chatbotPage = new ChatbotPage(page);
         // Dado que o usuário está na página "Chat com Max"
         await test.step('Acessa a página "Chat com Max"', async () => {
@@ -63,7 +63,7 @@ test.describe('Falar com Max', () => {
         });
     });
 
-    test('TC003 - Tentar enviar mensagem vazia', async ({  page }) => {
+    test('CT-003 | Tentar enviar mensagem vazia', async ({  page }) => {
         const chatbotPage = new ChatbotPage(page);
         // Dado que o usuário está na página "Chat com Max"
         await test.step('Acessa a página "Chat com Max"', async () => {
@@ -79,7 +79,7 @@ test.describe('Falar com Max', () => {
         });
     });
 
-    test('TC004 - Gravar áudio para enviar mensagem', async ({  page }) => {
+    test('CT-004 | Gravar áudio para enviar mensagem', async ({  page }) => {
        await page.addInitScript(() => {
             class FakeSpeechRecognition {
                 start() {
@@ -124,7 +124,7 @@ test.describe('Falar com Max', () => {
     });
 
 
-    test('TC005 - Negar permissão de microfone', async ({  page }) => {
+    test('CT-005 | Negar permissão de microfone', async ({  page }) => {
         
          await page.addInitScript(() => {
             class FakeSpeechRecognition {
@@ -160,7 +160,7 @@ test.describe('Falar com Max', () => {
         });
     });
 
-    test('TC006 - Botão "Nova Conversa" limpa o histórico', async ({  page }) => {
+    test('CT-006 | Botão "Nova Conversa" limpa o histórico', async ({  page }) => {
         const chatbotPage = new ChatbotPage(page);
 
         await test.step('Acessa a página "Chat com Max"', async () => {
@@ -186,7 +186,7 @@ test.describe('Falar com Max', () => {
         });
     });
 
-    test('TC007 - Histórico da conversa exibido em ordem', async ({  page }) => {
+    test('CT-007 | Histórico da conversa exibido em ordem', async ({  page }) => {
         const chatbotPage = new ChatbotPage(page);
         await test.step('Acessa a página "Chat com Max"', async () => {
             await chatbotPage.goto();
