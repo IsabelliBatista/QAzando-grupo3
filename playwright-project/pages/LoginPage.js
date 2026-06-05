@@ -12,9 +12,9 @@ class LoginPage extends BasePage {
     super(page);
 
     // Seletores — centralizados aqui para fácil manutenção
-    this.usernameInput = page.getByLabel('Usuário');
-    this.passwordInput = page.getByLabel('Senha');
-    this.loginButton   = page.getByRole('button', { name: 'Entrar' });
+    this.usernameInput = page.getByPlaceholder('seu@email.com');
+    this.passwordInput = page.getByPlaceholder('••••••••');
+    this.loginButton   = page.getByRole('button', { name: /entrar/i });
     this.errorMessage  = page.locator('.error-message');
     this.welcomeText   = page.locator('.welcome-header');
   }

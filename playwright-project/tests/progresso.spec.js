@@ -1,26 +1,96 @@
 const { test, expect } = require('../fixtures');
-const { allure }       = require('@playwright/test');
+const { LoginPage } = require('../pages/LoginPage');
+const { ProgressoPage } = require('../pages/ProgressoPage');
 
-test('Deve exibir dados corretos na tela de progresso', async ({ loginPage, page }) => {
-  await loginPage.goto();
-  await loginPage.login('usuario@teste.com', 'Senha@123');
+test.describe('Tela de Progresso', () => {
 
-  // Vai direto pra tela
-  await page.goto('/progresso');
+  let loginPage;
+  let progressoPage;
 
-  // Valida título
-  await expect(page.getByText('Seu Progresso aqui')).toBeVisible();
+  test.beforeEach(async ({ page }) => {
 
-  // Captura valores
-  const frasesRespondidas = await page.locator('text=Frases Respondidas').locator('..').locator('strong').textContent();
-  const frasesCorretas = await page.locator('text=Frases Corretas').locator('..').locator('strong').textContent();
-  const frasesIncorretas = await page.locator('text=Frases Incorretas').locator('..').locator('strong').textContent();
+    loginPage = new LoginPage(page);
+    progressoPage = new ProgressoPage(page);
 
-  // Converte para número
-  const respondidas = Number(frasesRespondidas);
-  const corretas = Number(frasesCorretas);
-  const incorretas = Number(frasesIncorretas);
+    await loginPage.goto();
 
-  // Regra de negócio
-  expect(corretas + incorretas).toBe(respondidas);
+    await loginPage.login(
+      'usuario@teste.com',
+      'Senha@123'
+    );
+
+    await page.waitForLoadState('networkidle');
+
+    await progressoPage.goto();
+
+  });
+
+  test('TC001 - Exibição das Estatísticas de Frases', async () => {
+
+    await expect(progressoPage.estatisticasFrasesTitulo)
+      .toBeVisible();
+
+    await expect(progressoPage.frasesRespondidas)
+      .toBeVisible();
+
+    await expect(progressoPage.frasesCorretas)
+      .toBeVisible();
+
+    await expect(progressoPage.frasesIncorretas)
+      .toBeVisible();
+
+    await expect(progressoPage.acertoFrases)
+      .toBeVisible();
+
+  });
+
+  test('TC002 - Exibição das Estatísticas de Palavras', async () => {
+
+    await expect(progressoPage.estatisticasPalavrasTitulo)
+      .toBeVisible();
+
+    await expect(progressoPage.palavrasRespondidas)
+      .toBeVisible();
+
+    await expect(progressoPage.palavrasCorretas)
+      .toBeVisible();
+
+    await expect(progressoPage.palavrasIncorretas)
+      .toBeVisible();
+
+    await expect(progressoPage.acertoPalavras)
+      .toBeVisible();
+
+  });
+
+  test('TC005 - Cálculo correto do percentual de acerto', async () => {
+    // TODO: substituir por selectors específicos dos cards
+
+    const {
+      respondidas,
+      corretas,
+      percentual
+    } = await progressoPage.getProgressoData();
+
+    const percentualEsperado =
+      respondidas > 0
+        ? Math.floor((corretas / respondidas) * 100)
+        : 0;
+
+    expect(percentual).toBe(percentualEsperado);
+
+  });
+
+  test('TC006 - Botão continuar praticando redireciona', async ({ page }) => {
+
+    await expect(progressoPage.botaoContinuarPraticando)
+      .toBeVisible();
+
+    await progressoPage.botaoContinuarPraticando.click();
+
+    await expect(page)
+      .toHaveURL(/exercises/);
+
+  });
+
 });
