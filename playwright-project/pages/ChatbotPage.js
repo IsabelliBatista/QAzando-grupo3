@@ -22,7 +22,6 @@ class ChatbotPage extends BasePage {
 
   async goto() {
     await this.navigate('/chatbot');
-    await this.page.waitForLoadState('networkidle');
   }
 
   async cabecalho() {

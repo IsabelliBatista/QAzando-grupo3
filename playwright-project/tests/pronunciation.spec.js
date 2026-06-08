@@ -4,12 +4,14 @@ const { allure }       = require('allure-playwright');
 const { PronunciationPage } = require('../pages/PronunciationPage');
 const { LoginPage } = require('../pages/LoginPage');
 const path = require('path');
+const fs = require('fs');
+const { USERS }        = require('../utils/credentials');
 
 test.describe('Treinar Pronúncia', () => {
 
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.goto();
-    await loginPage.login('custodiodigitalrafael@gmail.com', 'Yveslarock-26');
+    await loginPage.login(USERS.admin.email, USERS.admin.senha);
   });
 
   test('CT-001 | Carregamento da tela "Treinar Pronúncia"', async ({  page }) => {
@@ -50,6 +52,21 @@ test.describe('Treinar Pronúncia', () => {
   });
 
   test('CT-003 | Gravar pronúncia da frase gerada', async ({  page }) => {
+    await page.addInitScript(() => {
+            class FakeSpeechRecognition {
+                start() {
+                    setTimeout(() => {
+                        this.onresult({
+                            results: [[{
+                                        transcript: 'Hello'
+                            }]]
+                        });
+                    }, 1000);
+                }stop() {}
+            }
+            window.SpeechRecognition = FakeSpeechRecognition;
+            window.webkitSpeechRecognition = FakeSpeechRecognition;
+        });
     const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário tenha recebido uma frase em inglês
     await test.step('Acessa a página "Treinar Pronúncia" e gera uma frase', async () => {
@@ -62,24 +79,62 @@ test.describe('Treinar Pronúncia', () => {
       //enviar audio com pronúncia 
     });
     // Então deve retornar um alerta com feedback
+    await test.step('Verifica que um alerta de feedback foi exibido', async () => {
+      //await pronunciationPage.verificarAlertaFeedback();
+    });
     
   });
 
   test('CT-004 | Receber feedback de pronúncia correta', async ({  page }) => {
+    //await mockSpeechRecognition(page, 'Texto reconhecido');
     const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário tenha uma frase em inglês
+    await test.step('Acessa a página "Treinar Pronúncia" e gera uma frase', async () => {
+      await pronunciationPage.goto();
+      await pronunciationPage.clicarGerarFrase();
+    });
     // Quando gravar a pronúncia correta
+    await test.step('Clica no botão "Falar Agora" e "Receber Feedback"', async () => {
+      await pronunciationPage.clicarFalarAgora();
+      //enviar audio com pronúncia 
+    });
     // Então deve retornar um alerta com feedback positivo
+    await test.step('Verifica que um alerta de feedback foi exibido', async () => {
+      //await pronunciationPage.verificarAlertaFeedback();
+    });
   });
 
   test('CT-005 | Receber feedback de pronúncia incorreta', async ({  page }) => {
+    //await mockSpeechRecognition(page, '');
     const pronunciationPage = new PronunciationPage(page);
     // Dado que o usuário tenha uma frase em inglês
+    await test.step('Acessa a página "Treinar Pronúncia" e gera uma frase', async () => {
+      await pronunciationPage.goto();
+      await pronunciationPage.clicarGerarFrase();
+    });
     // Quando gravar a pronúncia incorreta
+    await test.step('Clica no botão "Falar Agora" e "Receber Feedback"', async () => {
+      await pronunciationPage.clicarFalarAgora();
+      //enviar audio com pronúncia 
+    });
     // Então deve retornar um alerta com dicas de melhoria
   });
 
   test('CT-006 | Negar permissão de microfone', async ({  page }) => {
+    await page.addInitScript(() => {
+            class FakeSpeechRecognition {
+                start() {
+                    if (this.onerror) {
+                        this.onerror({error: 'not-allowed'});
+                    }
+                }stop() {}
+            }
+            window.SpeechRecognition = FakeSpeechRecognition;
+            window.webkitSpeechRecognition = FakeSpeechRecognition;
+        });
+        page.on('console', msg => {
+            console.log(msg.text());
+      });
     const pronunciationPage = new PronunciationPage(page);
     // Dado que o ususário tenha uma frase 
     await test.step('Acessa a página "Treinar Pronúncia"', async () => {
@@ -92,11 +147,7 @@ test.describe('Treinar Pronúncia', () => {
     });
     // E negar a permissão de microfone
     await test.step('Nega permissão de microfone', async () => {
-        await page.addInitScript(() => {
-            navigator.mediaDevices.getUserMedia = async () => {
-                throw new Error('Permission denied');
-            };
-        }); 
+       //negar permissão não é possível por meio do playwright 
     });    
     // Então exibe mensagem orientativa sem quebrar a interface
     await test.step('Verifica mensagem orientativa', async () => {

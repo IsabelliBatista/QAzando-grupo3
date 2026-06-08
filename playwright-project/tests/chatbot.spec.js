@@ -6,13 +6,16 @@ const { ChatbotPage } = require ('../pages/ChatbotPage');
 const { LoginPage } = require('../pages/LoginPage');
 const path = require('path');
 const fs = require('fs');
+const { USERS }        = require('../utils/credentials');
 
 
 test.describe('Falar com Max', () => {
 
-  test.beforeEach(async ({ loginPage }) => {
+  test.beforeEach(async ({ loginPage, page }) => {
     await loginPage.goto();
-    await loginPage.login('custodiodigitalrafael@gmail.com', 'Yveslarock-26');
+    await loginPage.login(USERS.admin.email, USERS.admin.senha);
+
+    console.log('Login concluído');
   });
 
     test('CT-001 | Carregamento do Chat com Max', async ({  page }) => { 
@@ -86,7 +89,7 @@ test.describe('Falar com Max', () => {
                     setTimeout(() => {
                         this.onresult({
                             results: [[{
-                                        transcript: 'Texto reconhecido'
+                                        transcript: 'Hello'
                             }]]
                         });
                     }, 1000);
@@ -126,7 +129,7 @@ test.describe('Falar com Max', () => {
 
     test('CT-005 | Negar permissão de microfone', async ({  page }) => {
         
-         await page.addInitScript(() => {
+        await page.addInitScript(() => {
             class FakeSpeechRecognition {
                 start() {
                     if (this.onerror) {

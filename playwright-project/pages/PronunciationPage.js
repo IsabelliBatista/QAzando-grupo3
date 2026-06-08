@@ -10,13 +10,13 @@ class PronunciationPage extends BasePage {
         this.campoSubtitulo = page.getByText('Pratique sua pronúncia com frases geradas por IA e feedback em tempo real');
         this.botaoGerarFrase = page.getByRole('button', { name: 'Gerar Nova Frase com IA' });
         this.botaoFalarAgora = page.getByRole('button', { name: 'Falar Agora e Receber Feedback' });
-        this.campoAlertaErroAudio = page.getByText('Não foi possível reconhecer o áudio. Tente novamente.');
-        this.alertaFraseGerada = page.locator('div.text-sm.font-semibold',{ hasText: 'Nova frase gerada!' });
+        this.campoAlertaErroAudio = page.locator('div.text-sm.font-semibold',{ hasText: 'Erro no reconhecimento' });
+        this.alertaFraseGerada = page.locator('div.text-sm.font-semibold',{ hasText: 'Nova frase gerada!' }).first();
+        this.alertaFeedback = page.locator('div.text-sm.font-semibold',{ hasText: 'Bom trabalho! 👍' });
     }
 
     async goto() {
         await this.navigate('/pronunciation');
-        await this.page.waitForLoadState('networkidle');
     }
 
     async verificarTitulo() {
@@ -39,12 +39,37 @@ class PronunciationPage extends BasePage {
         await expect(this.campoAlertaErroAudio).toBeVisible({ timeout: 10000 });
     }
 
+    async verificarAlertaFeedback() {
+        await expect(this.alertaFeedback).toBeVisible({ timeout: 10000 });
+    }
+
     async clicarGerarFrase() {
         await this.botaoGerarFrase.click();
     }
 
     async clicarFalarAgora() {
         await this.botaoFalarAgora.click();
+    }
+
+    async mockSpeechRecognition(page, transcript) {
+        await page.addInitScript((texto) => {
+            class FakeSpeechRecognition {
+                start() {
+                    setTimeout(() => {
+                        this.onresult({
+                            results: [[{
+                                transcript: texto
+                            }]]
+                        });
+                    }, 1000);
+                }
+
+                stop() {}
+            }
+
+            window.SpeechRecognition = FakeSpeechRecognition;
+            window.webkitSpeechRecognition = FakeSpeechRecognition;
+        }, transcript);
     }
 }
 module.exports = { PronunciationPage };

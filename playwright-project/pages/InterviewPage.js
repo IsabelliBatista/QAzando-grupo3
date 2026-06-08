@@ -13,10 +13,12 @@ class InterviewPage extends BasePage {
     this.botaoGerarNovaPergunta = page.getByRole('button', { name: 'Gerar Nova Pergunta' });
     this.perguntaComSucesso = page.getByText('Sua pergunta de entrevista foi criada com sucesso');
     this.respostaAvaliadaComSucesso = page.getByText('Resposta Avaliada!');
+    this.analiseEFeedback = page.getByText('Análise e Feedback');
   }
   
   async goto() {
     await this.navigate('/interview');
+    await this.page.waitForLoadState('networkidle');
   }
 
   async gerarPergunta() {
@@ -53,6 +55,10 @@ class InterviewPage extends BasePage {
 
   async respostaAvaliada() {
     await expect(this.respostaAvaliadaComSucesso.first()).toBeVisible({ timeout: 15000 });
+  }
+
+  async verificarAvaliaçãoResposta() {
+    await expect(this.analiseEFeedback.first()).toBeVisible({ timeout: 15000 });
   }
   
 }

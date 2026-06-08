@@ -1,13 +1,15 @@
 //interview.spec.js
-const { test, expect } = require('../fixtures');
+const { test, expect} = require('../fixtures');
 const { allure }       = require('allure-playwright');
 const { InterviewPage } = require ('../pages/InterviewPage');
+const { USERS }        = require('../utils/credentials');
 
 test.describe('Entrevista', () => {
 
     test.beforeEach(async ({ loginPage }) => {
         await loginPage.goto();
-        await loginPage.login('custodiodigitalrafael@gmail.com', 'Yveslarock-26');
+        await loginPage.login(USERS.admin.email, USERS.admin.senha);
+        console.log('Login concluído');
     });
 
     test('CT-001 | Carregamento da tela', async ({  page }) => {
@@ -58,7 +60,7 @@ test.describe('Entrevista', () => {
         await test.step('Confirma a avaliação da resposta', async () => {
             await interviewPage.verificarAvaliacaoVisivel();
         });
-    });
+    }); 
 
     test('CT-004 | Resposta vazia', async ({ page }) => {
         const interviewPage = new InterviewPage(page);

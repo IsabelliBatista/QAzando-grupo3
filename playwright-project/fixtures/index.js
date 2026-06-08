@@ -2,6 +2,7 @@ const { test: base } = require('@playwright/test');
 const { LoginPage }   = require('../pages/LoginPage');
 const { InterviewPage }  = require('../pages/InterviewPage');
 const { ChatbotPage } = require('../pages/ChatbotPage');
+const { PronunciationPage } = require('../pages/PronunciationPage');
 const { HomePage }    = require('../pages/HomePage');
 const { AuthPage }    = require('../pages/AuthPage');
 const { TrailPage }   = require('../pages/TrailPage');
