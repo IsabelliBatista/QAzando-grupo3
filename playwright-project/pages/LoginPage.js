@@ -15,7 +15,9 @@ class LoginPage extends BasePage {
     // Seletores — centralizados aqui para fácil manutenção
     this.usernameInput = page.getByPlaceholder('seu@email.com');
     this.passwordInput = page.getByPlaceholder('••••••••');
-    this.loginButton   = page.getByRole('button', { name: 'Entrar' });
+
+    this.loginButton   = page.getByRole('button', { name: /entrar/i });
+
     this.errorMessage  = page.locator('.error-message');
     this.welcomeText   = page.locator('.welcome-header');
   }
