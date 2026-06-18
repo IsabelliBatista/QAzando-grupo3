@@ -7,6 +7,7 @@ const { HomePage }    = require('../pages/HomePage');
 const { AuthPage }    = require('../pages/AuthPage');
 const { TrailPage }   = require('../pages/TrailPage');
 const { RankingPage } = require('../pages/RankingPage');
+const { QuizPage }    = require('../pages/QuizPage');
 
 const test = base.extend({
   loginPage: async ({ page }, use) => {
@@ -38,6 +39,10 @@ const test = base.extend({
 
   rankingPage: async ({ page }, use) => {
     await use(new RankingPage(page));
+  },
+
+  quizPage: async ({ page }, use) => {
+    await use(new QuizPage(page));
   },
 });
 
