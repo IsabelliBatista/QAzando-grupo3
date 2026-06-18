@@ -44,6 +44,7 @@ class PronunciationPage extends BasePage {
     }
 
     async clicarGerarFrase() {
+        await this.botaoGerarFrase.waitFor({ state: 'visible', timeout: 15000 });
         await this.botaoGerarFrase.click();
     }
 

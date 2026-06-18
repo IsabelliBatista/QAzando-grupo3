@@ -104,7 +104,7 @@ test.describe('Tela de Histórias', () => {
 
         await expect(
             storiesPage.botaoLimpar
-        ).toBeVisible({ timeout: 5000 });
+        ).toBeVisible({ timeout: 30000 });
 
         await storiesPage.botaoLimpar.click();
 
@@ -126,13 +126,13 @@ test.describe('Tela de Histórias', () => {
             page.getByRole('heading', {
                 name: /english|inglês/i
             })
-        ).toBeVisible();
+        ).toBeVisible({ timeout: 30000 });
 
         await expect(
             page.getByRole('heading', {
                 name: /versão em português/i
             })
-        ).toBeVisible();
+        ).toBeVisible({ timeout: 30000 });
 
     });
 

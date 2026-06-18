@@ -57,10 +57,14 @@ class InterviewPage extends BasePage {
     await expect(this.respostaAvaliadaComSucesso.first()).toBeVisible({ timeout: 15000 });
   }
 
-  async verificarAvaliaçãoResposta() {
+  async verificarAvaliacaoResposta() {
     await expect(this.analiseEFeedback.first()).toBeVisible({ timeout: 15000 });
   }
-  
+
+  async verificarAvaliacaoVisivel() {
+    await expect(this.analiseEFeedback.first()).toBeVisible({ timeout: 15000 });
+  }
+
 }
 
 module.exports = { InterviewPage };

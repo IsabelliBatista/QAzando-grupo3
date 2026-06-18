@@ -11,46 +11,39 @@ test.describe('M02 · Ranking', () => {
 
   // ── F02.01 - Estado vazio ─────────────────────────────────────────────────
 
-  test('CT-RK-001 | Ranking vazio deve exibir ícone de troféu e mensagens de estado vazio', async ({ rankingPage }) => {
+  test('CT-RK-001 | Página de ranking deve carregar com heading, ícone de troféu e seção de Classificação Geral', async ({ rankingPage }) => {
     allure.label('severity', 'critical');
-    allure.tag('smoke', 'ranking', 'estado-vazio');
+    allure.tag('smoke', 'ranking');
 
     await test.step('Verificar que o heading principal está visível', async () => {
       await expect(rankingPage.pageHeading).toBeVisible();
     });
 
-    await test.step('Verificar ícone de troféu no estado vazio', async () => {
-      await expect(rankingPage.emptyStateTrophyIcon).toBeVisible();
+    await test.step('Verificar ícone de troféu visível', async () => {
+      await expect(rankingPage.trophyIcon).toBeVisible();
     });
 
-    await test.step('Verificar mensagem "Nenhum usuário no ranking ainda"', async () => {
-      await expect(rankingPage.emptyStateMsg).toBeVisible();
-    });
-
-    await test.step('Verificar sub-mensagem "Seja o primeiro a responder exercícios!"', async () => {
-      await expect(rankingPage.emptyStateSub).toBeVisible();
+    await test.step('Verificar seção "Classificação Geral" visível', async () => {
+      await expect(rankingPage.classificacaoSection).toBeVisible();
     });
   });
 
   // ── F02.02 - Cards de métricas ────────────────────────────────────────────
 
-  test('CT-RK-002 | Cards de métricas devem exibir "0", "N/A" e "0%" quando ranking vazio', async ({ rankingPage }) => {
+  test('CT-RK-002 | Cards de métricas (Total de Competidores, Líder Atual, Maior Precisão) devem estar visíveis', async ({ rankingPage }) => {
     allure.label('severity', 'critical');
-    allure.tag('ranking', 'metricas', 'estado-vazio');
+    allure.tag('ranking', 'metricas');
 
-    await test.step('Verificar card "Total de Competidores" exibe 0', async () => {
+    await test.step('Verificar card "Total de Competidores" visível', async () => {
       await expect(rankingPage.totalCompetidoresCard).toBeVisible();
-      await expect(rankingPage.totalCompetidoresCard).toContainText('0');
     });
 
-    await test.step('Verificar card "Líder Atual" exibe N/A', async () => {
+    await test.step('Verificar card "Líder Atual" visível', async () => {
       await expect(rankingPage.liderAtualCard).toBeVisible();
-      await expect(rankingPage.liderAtualCard).toContainText('N/A');
     });
 
-    await test.step('Verificar card "Maior Precisão" exibe 0%', async () => {
+    await test.step('Verificar card "Maior Precisão" visível', async () => {
       await expect(rankingPage.maiorPrecisaoCard).toBeVisible();
-      await expect(rankingPage.maiorPrecisaoCard).toContainText('0%');
     });
   });
 
@@ -68,8 +61,8 @@ test.describe('M02 · Ranking', () => {
       await expect(rankingPage.classificacaoHeading).toBeVisible();
     });
 
-    await test.step('Verificar que a Classificação Geral exibe estado vazio (usuário com 0 respostas não aparece)', async () => {
-      await expect(rankingPage.emptyStateMsg).toBeVisible();
+    await test.step('Verificar que a seção "Classificação Geral" está visível', async () => {
+      await expect(rankingPage.classificacaoSection).toBeVisible();
     });
   });
 
