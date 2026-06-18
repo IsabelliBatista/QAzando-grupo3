@@ -8,6 +8,7 @@ const { AuthPage } = require('../pages/AuthPage');
 const { TrailPage } = require('../pages/TrailPage');
 const { RankingPage } = require('../pages/RankingPage');
 const { WordGeneratorPage } = require('../pages/WordGeneratorPage');
+const { QuizPage }    = require('../pages/QuizPage');
 
 const test = base.extend({
   loginPage: async ({ page }, use) => {
@@ -43,6 +44,8 @@ const test = base.extend({
 
   wordGeneratorPage: async ({ page }, use) => {
     await use(new WordGeneratorPage(page));
+  quizPage: async ({ page }, use) => {
+    await use(new QuizPage(page));
   },
 });
 
