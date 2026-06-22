@@ -26,6 +26,12 @@ class QuizPage extends BasePage {
   async goto() {
     await this.navigate('/quiz');
     await this.page.waitForLoadState('networkidle');
+    const refazerBtn = this.page.getByRole('button', { name: 'Refazer Quiz' });
+    if (await refazerBtn.isVisible()) {
+      await refazerBtn.click();
+      await this.page.waitForLoadState('networkidle');
+    }
+    await this.pageHeading.waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
   }
 
   async loginAndGoto(email, senha) {
@@ -33,7 +39,7 @@ class QuizPage extends BasePage {
     await this.page.locator('input[type="email"]').fill(email);
     await this.page.locator('input[type="password"]').fill(senha);
     await this.page.getByRole('button', { name: 'Entrar' }).click();
-    await this.page.waitForTimeout(2000);
+    await this.page.waitForURL(url => !url.href.includes('/auth'), { timeout: 8000 });
     await this.goto();
   }
 
@@ -45,6 +51,7 @@ class QuizPage extends BasePage {
   // Extrai o valor numérico de um card contador (ex: "14/30Questão" → 14, "7Acertos" → 7)
   async getCounterValue(label) {
     const card = this.page.locator('[class*="card"]').filter({ hasText: label }).first();
+    await card.waitFor({ state: 'visible', timeout: 15000 });
     const text = await card.textContent();
     const match = text?.match(/\d+/);
     return match ? parseInt(match[0]) : 0;

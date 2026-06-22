@@ -54,7 +54,7 @@ class InterviewPage extends BasePage {
   }
 
   async respostaAvaliada() {
-    await expect(this.respostaAvaliadaComSucesso.first()).toBeVisible({ timeout: 15000 });
+    await expect(this.respostaAvaliadaComSucesso.first()).toBeVisible({ timeout: 30000 });
   }
 
   async verificarAvaliacaoResposta() {

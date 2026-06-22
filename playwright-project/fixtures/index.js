@@ -44,6 +44,8 @@ const test = base.extend({
 
   wordGeneratorPage: async ({ page }, use) => {
     await use(new WordGeneratorPage(page));
+  },
+
   quizPage: async ({ page }, use) => {
     await use(new QuizPage(page));
   },
