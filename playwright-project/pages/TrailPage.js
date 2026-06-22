@@ -37,7 +37,7 @@ class TrailPage extends BasePage {
     await this.page.locator('input[type="email"]').fill(email);
     await this.page.locator('input[type="password"]').fill(senha);
     await this.page.getByRole('button', { name: 'Entrar' }).click();
-    await this.page.waitForTimeout(2000);
+    await this.page.waitForURL(url => !url.href.includes('/auth'), { timeout: 8000 });
     await this.goto();
   }
 

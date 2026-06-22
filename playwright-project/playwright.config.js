@@ -30,7 +30,7 @@ module.exports = defineConfig({
 
   use: {
     // URL base — ajuste para a URL da sua aplicação
-    baseURL: process.env.BASE_URL || 'https://ingles-qazando.lovable.app',
+    baseURL: process.env.BASE_URL || 'https://ingles-qazando.com',
 
     // Capturar trace em caso de falha
     trace: 'on-first-retry',

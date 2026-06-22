@@ -14,7 +14,7 @@ test.describe('Home', () => {
     allure.tag('smoke', 'home');
 
     await test.step('Verificar URL correta', async () => {
-      await expect(page).toHaveURL('https://ingles-qazando.lovable.app/');
+      await expect(page).toHaveURL('https://ingles-qazando.com/');
     });
 
     await test.step('Verificar título da página', async () => {

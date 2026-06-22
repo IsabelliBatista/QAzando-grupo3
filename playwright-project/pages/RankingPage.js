@@ -16,10 +16,8 @@ class RankingPage extends BasePage {
     this.liderAtualCard        = page.locator('[class*="card"]').filter({ hasText: 'Líder Atual' });
     this.maiorPrecisaoCard     = page.locator('[class*="card"]').filter({ hasText: 'Maior Precisão' });
 
-    // Estado vazio — ícone de troféu grande (h-16), mensagem e sub-mensagem
-    this.emptyStateTrophyIcon = page.locator('svg.lucide-trophy.h-16');
-    this.emptyStateMsg        = page.getByText('Nenhum usuário no ranking ainda');
-    this.emptyStateSub        = page.getByText('Seja o primeiro a responder exercícios!');
+    // Ícone de troféu nos cards de métricas
+    this.trophyIcon = page.locator('svg.lucide-trophy').first();
 
     // Seção de Classificação Geral (card que contém a lista / estado vazio)
     this.classificacaoSection = page.locator('[class*="card"]').filter({ hasText: 'Classificação Geral' });

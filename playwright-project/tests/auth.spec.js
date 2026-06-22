@@ -115,7 +115,7 @@ test.describe('Login', () => {
     });
 
     await test.step('Verificar redirecionamento para a home', async () => {
-      await expect(page).toHaveURL('https://ingles-qazando.lovable.app/');
+      await expect(page).toHaveURL('https://ingles-qazando.com/');
     });
 
     await test.step('Verificar conteúdo da home após login', async () => {

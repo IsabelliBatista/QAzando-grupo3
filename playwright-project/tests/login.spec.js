@@ -1,23 +1,23 @@
 const { test, expect } = require('../fixtures');
 const { allure }       = require('allure-playwright');
+const { USERS }        = require('../utils/credentials');
 
-/**
- * Exemplo de suite de testes para Login.
- * Substitua os dados e seletores conforme sua aplicação.
- */
 test.describe('Login', () => {
 
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.goto();
   });
 
-  test('CT-001 | Login com credenciais válidas', async ({ loginPage }) => {
-    // Metadados Allure
+  test('CT-001 | Login com credenciais válidas', async ({ loginPage, page }) => {
     allure.label('severity', 'critical');
     allure.tag('smoke', 'login');
 
     await test.step('Preencher credenciais e submeter', async () => {
-      await loginPage.login('usuario@exemplo.com', 'Senha@123');
+      await loginPage.login(USERS.admin.email, USERS.admin.senha);
+    });
+
+    await test.step('Aguardar redirecionamento após login', async () => {
+      await page.waitForURL(url => !url.href.includes('/auth'), { timeout: 8000 });
     });
 
     await test.step('Verificar redirecionamento para o dashboard', async () => {
@@ -30,12 +30,12 @@ test.describe('Login', () => {
     allure.tag('login', 'negativo');
 
     await test.step('Preencher credenciais inválidas e submeter', async () => {
-      await loginPage.login('usuario@exemplo.com', 'senha_errada');
+      await loginPage.login(USERS.invalido.email, USERS.invalido.senha);
     });
 
     await test.step('Verificar mensagem de erro', async () => {
       const errorMsg = await loginPage.getErrorMessage();
-      expect(errorMsg).toContain('Credenciais inválidas');
+      expect(errorMsg).toContain('Email ou senha incorretos');
     });
   });
 

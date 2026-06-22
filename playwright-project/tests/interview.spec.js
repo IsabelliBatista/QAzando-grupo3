@@ -6,9 +6,10 @@ const { USERS }        = require('../utils/credentials');
 
 test.describe('Entrevista', () => {
 
-    test.beforeEach(async ({ loginPage }) => {
+    test.beforeEach(async ({ loginPage, page }) => {
         await loginPage.goto();
         await loginPage.login(USERS.admin.email, USERS.admin.senha);
+        await page.waitForURL(url => !url.href.includes('/auth'), { timeout: 8000 });
         console.log('Login concluído');
     });
 
