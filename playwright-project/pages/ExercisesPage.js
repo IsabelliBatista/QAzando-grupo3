@@ -2,10 +2,6 @@ const { BasePage } = require('./BasePage');
 
 class ExercisesPage extends BasePage {
 
-    /**
-     * @param {import('@playwright/test').Page} page
-     */
-
     constructor(page) {
         super(page);
 
@@ -20,7 +16,6 @@ class ExercisesPage extends BasePage {
                 name: /verificar resposta/i
             });
 
-        // TOASTS
         this.toastAtencao =
             page.getByText('Atenção');
 
