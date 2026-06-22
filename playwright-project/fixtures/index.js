@@ -9,6 +9,7 @@ const { TrailPage } = require('../pages/TrailPage');
 const { RankingPage } = require('../pages/RankingPage');
 const { WordGeneratorPage } = require('../pages/WordGeneratorPage');
 const { QuizPage }    = require('../pages/QuizPage');
+const { ExercisesPage } = require('../pages/ExercisesPage');
 
 const test = base.extend({
   loginPage: async ({ page }, use) => {
@@ -48,6 +49,10 @@ const test = base.extend({
 
   quizPage: async ({ page }, use) => {
     await use(new QuizPage(page));
+  },
+
+  exercisesPage: async ({ page }, use) => {
+    await use(new ExercisesPage(page));
   },
 });
 

@@ -36,7 +36,7 @@ jobs:
         run: npm test
         env:
           CI: true
-          BASE_URL: https://ingles-qazando.lovable.app
+          BASE_URL: https://ingles-qazando.com
 
       - name: Generate Allure report
         if: always()
