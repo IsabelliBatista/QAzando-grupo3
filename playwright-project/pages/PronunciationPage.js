@@ -10,9 +10,11 @@ class PronunciationPage extends BasePage {
         this.campoSubtitulo = page.getByText('Pratique sua pronúncia com frases geradas por IA e feedback em tempo real');
         this.botaoGerarFrase = page.getByRole('button', { name: 'Gerar Nova Frase com IA' });
         this.botaoFalarAgora = page.getByRole('button', { name: 'Falar Agora e Receber Feedback' });
+        this.botaoOutraFrase = page.getByRole('button', { name: 'Gerar Outra Frase' });
         this.campoAlertaErroAudio = page.locator('div.text-sm.font-semibold',{ hasText: 'Erro no reconhecimento' });
         this.alertaFraseGerada = page.locator('div.text-sm.font-semibold',{ hasText: 'Nova frase gerada!' }).first();
-        this.alertaFeedback = page.locator('div.text-sm.font-semibold',{ hasText: 'Bom trabalho! 👍' });
+        this.alertaFeedback = page.locator('div.text-sm.font-semibold',{ hasText: 'Continue tentando! 💪' });
+        this.alertaFeedbackPositivo = page.locator('div.text-sm.font-semibold',{ hasText: 'Excelente! 🎉' });
     }
 
     async goto() {
@@ -43,6 +45,10 @@ class PronunciationPage extends BasePage {
         await expect(this.alertaFeedback).toBeVisible({ timeout: 10000 });
     }
 
+     async verificarAlertaFeedbackPositivo() {
+        await expect(this.alertaFeedbackPositivo).toBeVisible({ timeout: 10000 });
+    }
+
     async clicarGerarFrase() {
         await this.botaoGerarFrase.click();
     }
@@ -51,25 +57,51 @@ class PronunciationPage extends BasePage {
         await this.botaoFalarAgora.click();
     }
 
-    async mockSpeechRecognition(page, transcript) {
-        await page.addInitScript((texto) => {
+    async clicarOutraFrase() {
+        await this.botaoOutraFrase.click();
+    }
+
+    async mockSpeechRecognition({ delayMs = 300, error = null } = {}) {
+        await this.page.addInitScript(({ delayMs, error }) => {
             class FakeSpeechRecognition {
-                start() {
-                    setTimeout(() => {
-                        this.onresult({
-                            results: [[{
-                                transcript: texto
-                            }]]
-                        });
-                    }, 1000);
+                constructor() {
+                    this.lang = 'en-US';
+                    this.continuous = false;
+                    this.interimResults = false;
                 }
 
-                stop() {}
+               start() {
+                    console.log('[MOCK] start() chamado');
+                    this.onstart?.();
+                    setTimeout(() => {
+                        if (error) {
+                        console.log('[MOCK] disparando onerror:', error);
+                        this.onerror?.({ error });
+                        return;
+                        }
+
+                        const resultado = [{ transcript: window.__mockTranscript ?? 'default' }];
+                        resultado.isFinal = true; // 👈 adiciona a propriedade que a API real tem
+
+                        console.log('[MOCK] disparando onresult, handler existe?', typeof this.onresult);
+                        this.onresult?.({
+                        results: [resultado],
+                        resultIndex: 0, // 👈 alguns apps leem por aqui também
+                        });
+                        this.onend?.();
+                    }, delayMs);
+                    }
+
+                stop() {
+                    this.onend?.();
+                }
             }
 
             window.SpeechRecognition = FakeSpeechRecognition;
             window.webkitSpeechRecognition = FakeSpeechRecognition;
-        }, transcript);
+        }, { delayMs, error });
+        
     }
+
 }
 module.exports = { PronunciationPage };
