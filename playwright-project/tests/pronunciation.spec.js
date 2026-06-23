@@ -53,22 +53,9 @@ test.describe('Treinar Pronúncia', () => {
   });
 
   test('CT-003 | Gravar pronúncia da frase gerada', async ({  page }) => {
-    await page.addInitScript(() => {
-            class FakeSpeechRecognition {
-                start() {
-                    setTimeout(() => {
-                        this.onresult({
-                            results: [[{
-                                        transcript: 'Hello'
-                            }]]
-                        });
-                    }, 1000);
-                }stop() {}
-            }
-            window.SpeechRecognition = FakeSpeechRecognition;
-            window.webkitSpeechRecognition = FakeSpeechRecognition;
-        });
+    
     const pronunciationPage = new PronunciationPage(page);
+    await pronunciationPage.mockSpeechRecognition();
     // Dado que o usuário tenha recebido uma frase em inglês
     await test.step('Acessa a página "Treinar Pronúncia" e gera uma frase', async () => {
       await pronunciationPage.goto();
@@ -81,19 +68,40 @@ test.describe('Treinar Pronúncia', () => {
     });
     // Então deve retornar um alerta com feedback
     await test.step('Verifica que um alerta de feedback foi exibido', async () => {
-      //await pronunciationPage.verificarAlertaFeedback();
+      await pronunciationPage.verificarAlertaFeedback();
     });
     
   });
 
   test('CT-004 | Receber feedback de pronúncia correta', async ({  page }) => {
-    //await mockSpeechRecognition(page, 'Texto reconhecido');
+    
     const pronunciationPage = new PronunciationPage(page);
+
+    // Mock instalado ANTES da navegação, garantindo que exista
+    // quando o app real carregar e tentar usar SpeechRecognition.
+    await pronunciationPage.mockSpeechRecognition();
+    let frase;
+
     // Dado que o usuário tenha uma frase em inglês
     await test.step('Acessa a página "Treinar Pronúncia" e gera uma frase', async () => {
       await pronunciationPage.goto();
       await pronunciationPage.clicarGerarFrase();
     });
+
+    await test.step('Captura a frase gerada pela IA', async () => {
+      frase = await page
+        .locator('p.text-3xl.font-bold.text-foreground')
+        .innerText();
+
+      expect(frase).toBeTruthy();
+      console.log('Frase gerada:', frase);
+
+      // Injeta a frase capturada como transcript simulado de fala correta
+      await page.evaluate((texto) => {
+        window.__mockTranscript = texto;
+      }, frase);
+    });
+
     // Quando gravar a pronúncia correta
     await test.step('Clica no botão "Falar Agora" e "Receber Feedback"', async () => {
       await pronunciationPage.clicarFalarAgora();
@@ -101,13 +109,14 @@ test.describe('Treinar Pronúncia', () => {
     });
     // Então deve retornar um alerta com feedback positivo
     await test.step('Verifica que um alerta de feedback foi exibido', async () => {
-      //await pronunciationPage.verificarAlertaFeedback();
+      await pronunciationPage.verificarAlertaFeedbackPositivo();
     });
   });
 
   test('CT-005 | Receber feedback de pronúncia incorreta', async ({  page }) => {
-    //await mockSpeechRecognition(page, '');
+   
     const pronunciationPage = new PronunciationPage(page);
+    await pronunciationPage.mockSpeechRecognition();
     // Dado que o usuário tenha uma frase em inglês
     await test.step('Acessa a página "Treinar Pronúncia" e gera uma frase', async () => {
       await pronunciationPage.goto();
@@ -119,24 +128,18 @@ test.describe('Treinar Pronúncia', () => {
       //enviar audio com pronúncia 
     });
     // Então deve retornar um alerta com dicas de melhoria
+    await test.step('Verifica que um alerta de feedback foi exibido', async () => {
+      await pronunciationPage.verificarAlertaFeedback();
+    });
   });
 
   test('CT-006 | Negar permissão de microfone', async ({  page }) => {
-    await page.addInitScript(() => {
-            class FakeSpeechRecognition {
-                start() {
-                    if (this.onerror) {
-                        this.onerror({error: 'not-allowed'});
-                    }
-                }stop() {}
-            }
-            window.SpeechRecognition = FakeSpeechRecognition;
-            window.webkitSpeechRecognition = FakeSpeechRecognition;
-        });
-        page.on('console', msg => {
-            console.log(msg.text());
-      });
+    
     const pronunciationPage = new PronunciationPage(page);
+    await pronunciationPage.mockSpeechRecognition({ error: 'not-allowed' });
+    page.on('console', msg => {
+      console.log(msg.text());
+    });
     // Dado que o ususário tenha uma frase 
     await test.step('Acessa a página "Treinar Pronúncia"', async () => {
         await pronunciationPage.goto();
@@ -158,6 +161,7 @@ test.describe('Treinar Pronúncia', () => {
 
   test('CT-007 | Gerar nova frase após praticar', async ({  page }) => {
     const pronunciationPage = new PronunciationPage(page);
+    await pronunciationPage.mockSpeechRecognition();
     // Dado que o usuário tenha praticado a pronúncia de uma frase
     await test.step('Acessa a página "Treinar Pronúncia" e pratica uma frase', async () => {
         await pronunciationPage.goto();
@@ -166,7 +170,17 @@ test.describe('Treinar Pronúncia', () => {
         //enviar audio com pronúncia 
     });
     // E foi entregue feedback
+    await test.step('Verifica que um alerta de feedback foi exibido', async () => {
+        await pronunciationPage.verificarAlertaFeedback();
+    });
     // Quando clicar em Gerar outra frase
+    await test.step('Clica no botão "Gerar Nova Frase com IA"', async () => {
+        await pronunciationPage.clicarOutraFrase();
+    });
     // Então deve retornar uma nova frase em inglês 
+    await test.step('Verifica que uma nova frase em inglês foi gerada', async () => {
+        await pronunciationPage.verificarFraseGerada();
+    });
+  
   });
 });
